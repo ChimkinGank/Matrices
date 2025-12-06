@@ -5,5 +5,8 @@ public class Driver{
     Matrix abT = a.multiply(b).transpose();
     Matrix bTaT=b.transpose().multiply(a.transpose());
     System.out.println(abT.equals(bTaT));
+    Matrix c = new Matrix(new double[][]{{1,2,3},{4,5,6},{7,8,10}});
+    c.rref();
+    System.out.println(c);
   }
 }

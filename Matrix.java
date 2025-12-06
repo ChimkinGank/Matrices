@@ -107,4 +107,114 @@ public class Matrix{
     Matrix win = new Matrix(rand);
     return win;
   }
+
+  private void elem1(int a, int b){
+    double[]k=entries[a];
+    entries[a]=entries[b];
+    entries[b]=k;
+  }
+
+  private void elem2(int a, int b, double k){
+    for(int c=0; c<entries[0].length; c++){
+      entries[b][c]+=k*entries[a][c];
+    }
+  }
+
+  private void elem3(int a, double k){
+    for(int c=0; c<entries[0].length; c++){
+      entries[a][c]*=k;
+    }
+  }
+
+  private void refstep(int k,int s){
+    if (k<entries.length&&s<entries[0].length){
+      int rows=entries.length;
+      if (entries[k][s]==0){
+        int c=k;
+        boolean allzero=true;
+        int winner=k;
+        while (c<rows){
+          if (entries[c][s]!=0){
+            allzero=false;
+            winner=c;
+            break;
+          }
+          else{
+            c++;
+          }
+        }
+        if (allzero){
+          refstep(k,s+1);
+          return;
+        }
+        else{
+          elem1(k,winner);
+        }
+      }
+      elem3(k,1.0/entries[k][s]);
+      if (k!=rows-1){
+        int counter=k+1;
+        while (counter<rows){
+          elem2(k,counter,-entries[counter][s]);
+          counter+=1;
+        }
+        refstep(k+1,s+1);
+      }
+    }
+  }
+
+  private int pivloc(int k){
+    int cols=entries[0].length;
+    int p=0;
+    while (p<cols){
+      if (entries[k][p]!=0){
+        return p;
+      }
+      p++;
+    }
+    return -1;
+  }
+
+  private void rowdrag(int k){
+    int rows=entries.length;
+    while (k<rows-1){
+      elem1(k,k+1);
+      k+=1;
+    }
+  }
+
+  public void rref(){
+    refstep(0,0);
+    int rows=entries.length;
+    int k=0;
+    while (k<rows){
+      if (pivloc(k)==-1){
+        rowdrag(k);
+      }
+      k+=1;
+    }
+    k=0;
+    int last=rows-1;
+    while (k<rows){
+      if (pivloc(k)==-1){
+        last=k-1;
+        break;
+      }
+      k+=1;
+    }
+    if (last!=-1){
+      k=0;
+      while (k<=last){
+        int s=pivloc(k);
+        int counter=k-1;
+        while (counter>=0){
+          elem2(k,counter,-entries[counter][s]);
+          counter-=1;
+        }
+        k+=1;
+      }
+    }
+  }
+
+
 }
