@@ -216,5 +216,19 @@ public class Matrix{
     }
   }
 
+  public Matrix add(Matrix m){
+    if (getRows()!=m.getRows()||getColumns()!=m.getColumns()){
+      throw new IllegalArgumentException("Matrices must be same size to add");
+    }
+    double[][] k = new double[getRows()][getColumns()];
+    for (int i = 0; i<getRows(); i++){
+      for (int j = 0; j<getColumns(); j++){
+        k[i][j]=entries[i][j]+m.entries[i][j];
+      }
+    }
+    Matrix n = new Matrix(k);
+    return n;
+  }
+
 
 }
