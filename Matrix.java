@@ -96,11 +96,11 @@ public class Matrix{
     return boo;
   }
 
-  public static Matrix randomMatrix(){
-    double[][] rand = new double[100][100];
+  public static Matrix randomMatrix(int n){
+    double[][] rand = new double[n][n];
     Random seed = new Random();
-    for (int i = 0; i<100; i++){
-      for (int j = 0; j<100; j++){
+    for (int i = 0; i<n; i++){
+      for (int j = 0; j<n; j++){
         rand[i][j]=seed.nextInt()%100;
       }
     }
@@ -214,6 +214,59 @@ public class Matrix{
         k+=1;
       }
     }
+  }
+
+  public boolean isInvertible(){
+    if (getRows()!=getColumns()){
+      return false;
+    }
+    double[][] entries2 = new double[getRows()][getRows()];
+    for (int i = 0; i<getRows(); i++){
+      for (int j = 0; j<getRows(); j++){
+        entries2[i][j]=entries[i][j];
+      }
+    }
+    Matrix m = new Matrix(entries2);
+    m.rref();
+    return m.equals(identity(getRows()));
+  }
+
+  public static Matrix identity(int n){
+    double[][] entry = new double[n][n];
+    for (int i = 0; i<n; i++){
+      for (int j = 0; j<n; j++){
+        if (i==j){
+          entry[i][j]=1;
+        }
+      }
+    }
+    return new Matrix(entry);
+  }
+
+  public Matrix inverse(){
+    if (!isInvertible()){
+      throw new IllegalArgumentException("This matrix is not invertible");
+    }
+    int n = getRows();
+    double[][] joined = new double[n][2*n];
+    for (int i = 0; i<n; i++){
+      for (int j = 0; j<2*n; j++){
+        if (j<n){
+          joined[i][j]=get(i,j);
+        } else if (i+n==j){
+          joined[i][j]=1;
+        }
+      }
+    }
+    Matrix bigguy = new Matrix(joined);
+    bigguy.rref();
+    double[][] inverse = new double[n][n];
+    for (int i = 0; i<n; i++){
+      for (int j = 0; j<n; j++){
+        inverse[i][j]=bigguy.get(i,n+j);
+      }
+    }
+    return new Matrix(inverse);
   }
 
   public Matrix add(Matrix m){
