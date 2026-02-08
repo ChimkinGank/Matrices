@@ -243,6 +243,45 @@ public class Matrix{
     return new Matrix(entry);
   }
 
+  public Matrix explode(int r, int c){
+    int n = getRows();
+    double[][] entries2 = new double[n-1][n-1];
+    int xskipped = 0;
+    int yskipped = 0;
+    for (int i = 0; i<n; i++){
+      if (i==r){
+        i++;
+        xskipped++;
+      }
+      yskipped=0;
+      for (int j = 0; j<n; j++){
+        if (j==c){
+          j++;
+          yskipped++;
+        }
+        if (i<n&&j<n){
+          entries2[i-xskipped][j-yskipped]=get(i,j);
+        }
+      }
+    }
+    return new Matrix(entries2);
+  }
+
+  public double det(){
+    if (getRows()!=getColumns()){
+      throw new IllegalArgumentException("The matrix must be square");
+    }
+    int n = getRows();
+    if (n==1){
+      return get(0,0);
+    }
+    double count = 0;
+    for (int i = 0; i<n; i++){
+      count += (1-(2*(i%2)))*get(0,i)*explode(0,i).det();
+    }
+    return count;
+  }
+
   public Matrix inverse(){
     if (!isInvertible()){
       throw new IllegalArgumentException("This matrix is not invertible");
