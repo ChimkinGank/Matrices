@@ -5,9 +5,9 @@ public class Driver{
     double[][] l = new double[43][1];
     for (int i = 0; i<43; i++){
       double c = i/100.0;
-      k[i][0]=1;
+      k[i][2]=1;
       k[i][1]=c;
-      k[i][2]=c*c;
+      k[i][0]=c*c;
       l[i][0]=n[i];
     }
     Matrix A = new Matrix(k);
